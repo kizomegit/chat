@@ -2,7 +2,7 @@ import './App.css'
 import { useState } from 'react'
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
-import { getFirestore, collection, addDoc, query, orderBy, limit, serverTimestamp } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore'
 
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
@@ -91,7 +91,7 @@ function SignOut() {
 function ChatRoom({ user }) {
     const [text, setText] = useState('')
     const messageRef = collection(db, 'messages')
-    const messageQuery = query(messageRef, orderBy('createdAt'), limit(25))
+    const messageQuery = query(messageRef, orderBy('createdAt'))
 
     const [snapshot] = useCollection(messageQuery)
 
@@ -113,7 +113,7 @@ function ChatRoom({ user }) {
     return(
         <div>
             <div className='divider' />
-            <main className='overflow-auto' >
+            <main className='overflow-auto h-200 w-300' >
                 {snapshot?.docs.map(doc => <Message key={doc.id} message={{ id: doc.id, ...doc.data() }} />)}
             </main>
             <div className='divider' />
