@@ -3,19 +3,12 @@ import { useState } from 'react'
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
 import { getFirestore, collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore'
-
+import { config } from './firebase-config.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 
-const firebaseConfig = {
-    apiKey: "AIzaSyD9TQbQLnEQ9HaLzUZy7_d8ZJZH20xg7ww",
-    authDomain: "fer-chatroom.firebaseapp.com",
-    projectId: "fer-chatroom",
-    storageBucket: "fer-chatroom.firebasestorage.app",
-    messagingSenderId: "1090771173173",
-    appId: "1:1090771173173:web:860f54d16caa746bae967c",
-    measurementId: "G-4CK14RF4YS"
-}
+console.log('config here: ', config)
+const firebaseConfig = config
 
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
