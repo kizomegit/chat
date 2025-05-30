@@ -1,5 +1,5 @@
 import './App.css'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { initializeApp } from 'firebase/app'
 import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup } from 'firebase/auth'
 import { getFirestore, collection, addDoc, query, orderBy, serverTimestamp } from 'firebase/firestore'
@@ -7,7 +7,6 @@ import { config } from './firebase-config.js'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
 
-console.log('config here: ', config)
 const firebaseConfig = config
 
 const app = initializeApp(firebaseConfig)
@@ -16,7 +15,6 @@ const auth = getAuth(app)
 
 function App() {
     const [user] = useAuthState(auth)
-    console.log(user)
 
     return (
         <div className='flex flex-col items-center justify-center' >
@@ -87,6 +85,11 @@ function ChatRoom({ user }) {
     const messageQuery = query(messageRef, orderBy('createdAt'))
 
     const [snapshot] = useCollection(messageQuery)
+    const bottomOfChat = useRef(null)
+
+    useEffect(() => {
+        bottomOfChat.current?.scrollIntoView({ behavior: 'smooth' })
+    }, [snapshot])
 
     const handleSend = async (e) => {
         e.preventDefault()
@@ -108,6 +111,7 @@ function ChatRoom({ user }) {
             <div className='divider' />
             <main className='overflow-auto h-200 w-300' >
                 {snapshot?.docs.map(doc => <Message key={doc.id} message={{ id: doc.id, ...doc.data() }} />)}
+                <div ref={bottomOfChat} ></div>
             </main>
             <div className='divider' />
             <form onSubmit={handleSend} className='flex flex-row justify-center' >
